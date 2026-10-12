@@ -4,6 +4,11 @@ A Grafana dashboard for [`dirigera-exporter`](https://github.com/Yornik/dirigera
 visualising air quality from IKEA DIRIGERA environment sensors (VINDSTYRKA /
 ALPSTUGA) and STARKVIND air purifiers, scraped by Prometheus.
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/dashboard-light.png">
+  <img alt="The DIRIGERA air quality dashboard, rendered with test data" src="docs/dashboard-dark.png" width="800">
+</picture>
+
 ## Panels
 
 - **Stat row:** current temperature, humidity, CO₂ and PM2.5.
@@ -14,6 +19,15 @@ ALPSTUGA) and STARKVIND air purifiers, scraped by Prometheus.
   - PM2.5 — green < 15, amber 15–35, red > 35 µg/m³
 - **Air Purifier (STARKVIND):** on/off, fan mode, fan speed, filter status, and an on/off timeline.
 - A `sensor` template variable to filter by device.
+
+The air purifier section, with the on/off timeline:
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/purifier-light.png">
+  <img alt="Air purifier panels: status, fan speed, fan mode, filter, and an On/Off timeline" src="docs/purifier-dark.png" width="800">
+</picture>
+
+The screenshots use generated test data, not real sensor readings.
 
 ## Required metrics
 
