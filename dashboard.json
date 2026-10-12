@@ -1044,7 +1044,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "fixed",
+            "fixedColor": "#5a5f6b"
           },
           "custom": {
             "fillOpacity": 80,
