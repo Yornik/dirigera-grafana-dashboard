@@ -11,20 +11,37 @@ ALPSTUGA) and STARKVIND air purifiers, scraped by Prometheus.
 
 ## Panels
 
-- **Stat row:** current temperature, humidity, CO₂ and PM2.5.
-- **Time series** for each metric, with comfort/quality thresholds:
-  - Temperature — blue < 18 °C, green 18–23, red > 23
-  - Humidity — comfort band 40–60 %
-  - CO₂ — green < 800, amber 800–1200, red > 1200 ppm
-  - PM2.5 — green < 15, amber 15–35, red > 35 µg/m³
-- **Air Purifier (STARKVIND):** on/off, fan mode, fan speed, filter status, and an on/off timeline.
-- A `sensor` template variable to filter by device.
+- **Needs attention:** a full-width strip at the top. It lists only what needs
+  you, in plain words with a ⚠ sign: a stuffy room (CO₂ 1000 ppm or more), a
+  damp room (70 % or more for an hour), smoke or cooking (PM2.5 35 µg/m³ or
+  more), a purifier filter to replace, a purifier that stopped, a sensor with no
+  reading, or a hub that stopped answering. Otherwise it says "Nothing right
+  now".
+- **Now:** one tile each for temperature, humidity, CO₂ and PM2.5, per room,
+  with a status word (for example "Bedroom: fresh").
+- **History:** temperature, humidity, CO₂ and PM2.5 over time, one color per
+  room, with gray reference marks:
+  - Temperature: the comfortable band of the selected room (16-19 °C in a
+    bedroom, 19-22 °C elsewhere).
+  - Humidity: 40-60 %.
+  - CO₂: a dashed line at 1000 ppm, "open a window".
+  - PM2.5: a dashed line at 15 µg/m³, the WHO 24-hour guideline, on a
+    logarithmic scale so cooking peaks do not flatten the everyday level.
+- **Air purifier (STARKVIND):** fan mode and speed, the filter state, the fan
+  speed over time, and the particles the purifier itself senses, aligned so a
+  particle peak sits above the fan boost it causes.
+- A `room` template variable to show one room or all.
 
-The air purifier section, with the on/off timeline:
+Readings of exactly 0 °C, 0 % or 0 ppm are treated as "no reading" and show as
+a gap: the hub reports 0 when a sensor drops out. When the hub stops answering,
+the charts show a gap instead of the last value.
+
+The air purifier section. The fan speed sits right above the particles the
+purifier senses, so a particle peak lines up with the fan boost it causes:
 
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="docs/purifier-light.png">
-  <img alt="Air purifier panels: status, fan speed, fan mode, filter, and an On/Off timeline" src="docs/purifier-dark.png" width="800">
+  <img alt="Air purifier panels: fan mode and speed, filter state, fan speed over time and the particles the purifier senses" src="docs/purifier-dark.png" width="800">
 </picture>
 
 The screenshots use generated test data, not real sensor readings.
