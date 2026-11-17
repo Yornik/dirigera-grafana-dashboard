@@ -330,7 +330,7 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 4,
+        "h": 8,
         "w": 6,
         "x": 0,
         "y": 3
@@ -373,7 +373,7 @@
         "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -386,7 +386,7 @@
         "wideLayout": true,
         "text": {
           "titleSize": 14,
-          "valueSize": 32
+          "valueSize": 20
         }
       },
       "targets": [
@@ -428,7 +428,7 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 4,
+        "h": 8,
         "w": 6,
         "x": 6,
         "y": 3
@@ -471,7 +471,7 @@
         "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -484,7 +484,7 @@
         "wideLayout": true,
         "text": {
           "titleSize": 14,
-          "valueSize": 32
+          "valueSize": 20
         }
       },
       "targets": [
@@ -526,7 +526,7 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 4,
+        "h": 8,
         "w": 6,
         "x": 12,
         "y": 3
@@ -624,7 +624,7 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 4,
+        "h": 8,
         "w": 6,
         "x": 18,
         "y": 3
@@ -725,7 +725,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 11
       },
       "fieldConfig": {
         "defaults": {
@@ -944,7 +944,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 7
+        "y": 11
       },
       "fieldConfig": {
         "defaults": {
@@ -1083,7 +1083,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 19
       },
       "fieldConfig": {
         "defaults": {
@@ -1218,7 +1218,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 15
+        "y": 19
       },
       "fieldConfig": {
         "defaults": {
@@ -1350,7 +1350,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 27
       },
       "id": 9,
       "panels": [],
@@ -1377,7 +1377,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 28
       },
       "fieldConfig": {
         "defaults": {
@@ -1525,7 +1525,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 31
       },
       "fieldConfig": {
         "defaults": {
@@ -1625,7 +1625,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 37
       },
       "fieldConfig": {
         "defaults": {
