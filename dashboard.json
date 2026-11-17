@@ -978,6 +978,219 @@
           },
           {
             "matcher": {
+              "id": "byFrameRefID",
+              "options": "R1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R5"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R6"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R7"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R8"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R9"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
               "id": "byName",
               "options": "Comfortable from"
             },
@@ -1089,7 +1302,115 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R1",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R2",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R3",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R4",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R5",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R6",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R7",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R8",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R9",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) unless on(room) bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d]))))",
           "refId": "A",
           "instant": false,
           "range": true,
@@ -1371,6 +1692,219 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R5"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R6"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R7"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R8"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R9"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
           }
         ]
       },
@@ -1395,7 +1929,115 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R1",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R2",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R3",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R4",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R5",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R6",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R7",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R8",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R9",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) unless on(room) bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d]))))",
           "refId": "A",
           "instant": false,
           "range": true,
@@ -1672,6 +2314,219 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R5"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R6"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R7"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R8"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R9"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
           }
         ]
       },
@@ -1696,7 +2551,115 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R1",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R2",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R3",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R4",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R5",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R6",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R7",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R8",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R9",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_co2_ppm{room=~\"$room\"}[$__interval])) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) unless on(room) bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d]))))",
           "refId": "A",
           "instant": false,
           "range": true,
@@ -1977,6 +2940,219 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R1"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R2"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R3"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R5"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R6"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R7"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R8"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "R9"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
           }
         ]
       },
@@ -2001,7 +3177,115 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R1",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(1, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R2",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(2, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R3",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(3, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R4",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(4, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R5",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(5, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R6",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(6, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R7",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(7, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R8",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) and on(room) (bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))) unless on(room) bottomk(8, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d])))))",
+          "refId": "R9",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}}"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (max_over_time(ikea_air_pm25_micrograms_per_cubic_meter{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (max_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)) unless on(room) bottomk(9, (max by (room) (ikea_dirigera_room_order) and on(room) max by (room) (max_over_time(ikea_air_temperature_celsius[1d]))))",
           "refId": "A",
           "instant": false,
           "range": true,

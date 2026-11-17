@@ -15,6 +15,9 @@ T = list(range(END - 7 * 86400 - 3600, END + 1, STEP))
 def hour(t): return ((t % 86400) / 3600 + 1) % 24     # local time, UTC+1
 fam = {}
 state = {}
+# The rooms in the order of their oldest device, as dirigera-exporter numbers them.
+ROOMS = [("Bedroom", "rooms_bed"), ("Living room", "rooms_sofa"), ("Kitchen", "rooms_kitchen"), ("Office", "rooms_desk"),
+         ("Entrance", "rooms_home"), ("Bathroom", "rooms_bathtub")]
 PHASE = {"Bedroom": 10.5, "Living room": 9.0, "Office": 8.2, "Bathroom": 9.8}
 def add(metric, labels, t, v):
     lab = ",".join('%s="%s"' % kv for kv in labels.items())
@@ -38,6 +41,9 @@ for t in T:
     h = hour(t); day = (t - T[0]) // 86400
     add("ikea_dirigera_last_success_timestamp_seconds", {}, t, t)
     add("ikea_dirigera_scrape_success", {}, t, 1)
+    for number, (room, icon) in enumerate(ROOMS, start=1):
+        add("ikea_dirigera_room_order", {"room": room}, t, number)
+        add("ikea_dirigera_room_info", {"room": room, "icon": icon, "color": "ikea_green_no_65"}, t, 1)
     for room, (sensor, base, swing, rh, full) in air.items():
         L = {"sensor": sensor, "room": room}
         st = state.setdefault(room, {"n": 0.0, "hn": 0.0, "co2": 480.0, "pm": 2.0, "amp": {}, "peak": {}})

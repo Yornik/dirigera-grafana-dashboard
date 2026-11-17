@@ -39,28 +39,36 @@ scraped by Prometheus:
 
 ### Room colors
 
-In the history charts each common room name has a fixed color and line style.
-Grafana does not pick a color by itself, so 2 rooms do not get similar colors
-by chance.
+In the history charts each room has a color and a line style of its own.
+Grafana does not pick a color, so 2 rooms never get similar colors by chance.
 
-| Room name contains | Line |
+`dirigera-exporter` 0.7.0 gives each room a number: 1 for the room with the
+oldest device, then 2, and so on. The name of a room is free text and 2 rooms
+can have the same icon, so neither tells rooms apart for certain. The number
+does. The charts take the rooms that have an air sensor, in the order of their
+number:
+
+| Room | Line |
 | --- | --- |
-| bed | blue |
-| living, lounge | pink |
-| office, study | yellow |
-| bath, shower | green, dashed |
-| kitchen | pink, dashed |
-| attic, loft | yellow, dashed |
-| hall, entrance, corridor | blue, dashed |
-| closet, wardrobe, storage | green, dotted |
-| garage, basement, cellar | pink, dotted |
+| 1st | blue |
+| 2nd | pink |
+| 3rd | yellow |
+| 4th | green, dashed |
+| 5th | blue, dashed |
+| 6th | pink, dashed |
+| 7th | yellow, dashed |
+| 8th | green, dotted |
+| 9th | blue, dotted |
 
 Blue, pink and yellow are the 3 colors of the palette that stay apart for every
-pair of lines, also for a color-blind reader. So a 4th room and up also get a
-dashed or a dotted line. A room with another name is gray. To give it a color,
-add a field override "Fields with name matching regex" to the 4 history
-charts. 2 rooms that match the same row, such as 2 bedrooms, share a line
-style: tell them apart in the legend, or add an override.
+pair of lines, also for a color-blind reader. So the 4th room and up also get
+a dashed or a dotted line. A room has the same line in all 4 charts, whatever
+the Room filter. A new room gets the highest number, so the other rooms keep
+their lines.
+
+With an older exporter, and for a 10th room and up, the line follows the name
+of the room: "bed" is blue, "living" pink, "office" yellow, "bath" green and
+dashed, and so on. A room with another name is gray.
 
 The temperature and the humidity chart draw the average of each time step.
 The charts are 12 columns wide and 10 rows high, close to the golden ratio.
