@@ -275,7 +275,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 9,
+        "w": 8,
         "x": 0,
         "y": 3
       },
@@ -365,16 +365,16 @@
     {
       "id": 3,
       "type": "stat",
-      "title": "Motion",
-      "description": "What each motion sensor reports at the last poll. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
+      "title": "Last motion",
+      "description": "How long ago each motion sensor last saw motion, in the last 24 hours. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 9,
+        "w": 4,
+        "x": 8,
         "y": 3
       },
       "fieldConfig": {
@@ -385,22 +385,19 @@
           },
           "mappings": [
             {
-              "type": "value",
+              "type": "range",
               "options": {
-                "0": {
-                  "text": "Quiet",
+                "from": null,
+                "to": 45,
+                "result": {
+                  "text": "Now",
                   "color": "text",
                   "index": 0
-                },
-                "1": {
-                  "text": "Motion",
-                  "color": "text",
-                  "index": 1
                 }
               }
             }
           ],
-          "noValue": "No reading",
+          "noValue": "None in 24 h",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -411,7 +408,8 @@
             ]
           },
           "decimals": 0,
-          "displayName": "${__data.fields.room}"
+          "displayName": "${__data.fields.room}",
+          "unit": "s"
         },
         "overrides": []
       },
@@ -442,7 +440,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (ikea_motion_detected{room=~\"$room\"})) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "(time() - max by (sensor, room) (max_over_time(timestamp(max by (sensor, room) (ikea_motion_detected{room=~\"$room\"}) == 1)[1d:30s]))) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
           "refId": "A",
           "instant": true,
           "range": false,
@@ -467,6 +465,93 @@
     {
       "id": 4,
       "type": "stat",
+      "title": "Motion, last 24 h",
+      "description": "Time with motion at each sensor in the last 24 hours, counted from the 30 s polls.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "noValue": "No reading",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 0,
+          "displayName": "${__data.fields.room}",
+          "unit": "m"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 32
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_motion_detected{room=~\"$room\"}[1d])) * 1440) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "exemplar": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "room",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "stat",
       "title": "Light at the sensor",
       "description": "Light at the light sensor of each motion sensor, in lux. 0 is too dark to measure. For scale: a lit room is about 100 to 500 lux.",
       "datasource": {
@@ -475,8 +560,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 14,
+        "w": 3,
+        "x": 15,
         "y": 3
       },
       "fieldConfig": {
@@ -552,7 +637,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": 6,
       "type": "bargauge",
       "title": "Batteries",
       "description": "Battery of each remote control and motion sensor. Yellow at 30 % or less, red at 15 % or less. A device the hub cannot reach is not listed here: see Needs attention.",
@@ -634,7 +719,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": 7,
       "type": "state-timeline",
       "title": "Lights over time",
       "description": "One row for each light. Gray: off. Blue: on, darker when brighter (dim up to 33 %, medium up to 66 %, bright above). A gap means the hub could not reach the light or stopped answering.",
@@ -758,19 +843,122 @@
       ]
     },
     {
-      "id": 7,
-      "type": "state-timeline",
-      "title": "Motion over time",
-      "description": "One row for each motion sensor. Blue: motion seen at a poll in that stretch. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
+      "id": 8,
+      "type": "timeseries",
+      "title": "Motion per hour",
+      "description": "Minutes with motion in each hour, counted from the 30 s polls. A bar covers the hour before it. It shows when the room is busy; the row below shows the exact moments.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 4,
+        "h": 6,
         "w": 24,
         "x": 0,
         "y": 19
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#3987e5"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "drawStyle": "bars",
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisWidth": 72,
+            "barWidthFactor": 0.85
+          },
+          "mappings": [],
+          "noValue": "No readings in this time range",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#3987e5",
+                "value": null
+              }
+            ]
+          },
+          "unit": "m",
+          "decimals": 0,
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_motion_detected{room=~\"$room\"}[1h])) * 60) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}",
+          "interval": "1h"
+        }
+      ],
+      "interval": "1h"
+    },
+    {
+      "id": 9,
+      "type": "state-timeline",
+      "title": "Motion over time",
+      "description": "One row for each motion sensor. Blue: motion seen at a poll in that stretch. Zoom in to see single moments. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 25
       },
       "fieldConfig": {
         "defaults": {
@@ -851,7 +1039,7 @@
       ]
     },
     {
-      "id": 8,
+      "id": 10,
       "type": "timeseries",
       "title": "Light at the sensor over time",
       "description": "Light at the light sensor of each motion sensor, in lux. A gap means no reading from the sensor or the hub.",
@@ -860,10 +1048,10 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 28
       },
       "fieldConfig": {
         "defaults": {
@@ -951,7 +1139,7 @@
       ]
     },
     {
-      "id": 9,
+      "id": 11,
       "type": "row",
       "title": "Batteries and connection",
       "collapsed": false,
@@ -959,12 +1147,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 34
       },
       "panels": []
     },
     {
-      "id": 10,
+      "id": 12,
       "type": "state-timeline",
       "title": "Battery over time",
       "description": "One row for each remote control and motion sensor. Gray: above 30 %. Yellow: 30 % or less. Red: 15 % or less, replace or charge it. A gap means the hub could not reach the device.",
@@ -976,7 +1164,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 35
       },
       "fieldConfig": {
         "defaults": {
@@ -1078,7 +1266,7 @@
       ]
     },
     {
-      "id": 11,
+      "id": 13,
       "type": "state-timeline",
       "title": "Connection over time",
       "description": "One row for each device the exporter reads. Yellow: the hub could not reach it. A light switched off at the wall is not reachable.",
@@ -1090,7 +1278,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 41
       },
       "fieldConfig": {
         "defaults": {

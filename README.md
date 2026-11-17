@@ -35,6 +35,10 @@ scraped by Prometheus:
   speed over time, and the particles the purifier itself senses, aligned so a
   particle peak sits above the fan boost it causes.
 - A `room` template variable to show one room or all.
+- A link to the other DIRIGERA dashboard.
+
+In the history charts, "Bedroom" is blue and "Living room" is pink. A room with
+another name gets a color from the Grafana palette, by its name.
 
 Readings of exactly 0 °C, 0 % or 0 ppm are treated as "no reading" and show as
 a gap: the hub reports 0 when a sensor drops out. When the hub stops answering,
@@ -58,13 +62,18 @@ The screenshots use generated test data, not real sensor readings.
 - **Needs attention:** a battery at 15 % or less, a device the hub cannot
   reach, or a hub that stopped answering. Otherwise it says "Nothing right
   now".
-- **Now:** how many lights are on in each room, what each motion sensor
-  reports, the light at the sensor in lux, and the battery of each remote control and
-  motion sensor.
+- **Now:** how many lights are on in each room, how long ago each motion
+  sensor last saw motion, the time with motion in the last 24 hours, the light
+  at the sensor in lux, and the battery of each remote control and motion
+  sensor.
 - **Lights over time:** one row for each light. Gray is off. Blue is on, and
   darker when brighter.
-- **Motion over time** and **Light at the sensor over time.** The hub is read
-  every 30 s, so a short motion between 2 polls is not seen.
+- **Motion per hour:** minutes with motion in each hour, as bars. It shows
+  when a room is busy.
+- **Motion over time:** the exact moments, one row for each sensor. Zoom in to
+  see single moments. The hub is read every 30 s, so a short motion between 2
+  polls is not seen.
+- **Light at the sensor over time.**
 - **Batteries and connection:** the battery of each device over time, and when
   the hub could not reach a device. A light switched off at the wall is not
   reachable.
