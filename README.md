@@ -42,7 +42,7 @@ scraped by Prometheus:
 In the history charts each room has a color and a line style of its own.
 Grafana does not pick a color, so 2 rooms never get similar colors by chance.
 
-`dirigera-exporter` 0.7.0 gives each room a number: 1 for the room with the
+`dirigera-exporter` 0.6.0 gives each room a number: 1 for the room with the
 oldest device, then 2, and so on. The name of a room is free text and 2 rooms
 can have the same icon, so neither tells rooms apart for certain. The number
 does. The charts take the rooms that have an air sensor, in the order of their
