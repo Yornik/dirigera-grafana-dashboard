@@ -1,0 +1,1362 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "liveNow": false,
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "weekStart": "",
+  "title": "DIRIGERA Lights and Motion",
+  "uid": "dirigera-lights",
+  "version": 1,
+  "tags": [
+    "dirigera",
+    "lights",
+    "ikea"
+  ],
+  "description": "Lights, motion and batteries at home: what needs you now, what is on now, and what was on over time. Read from the DIRIGERA hub every 30 s.",
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "DIRIGERA dashboards",
+      "tags": [
+        "dirigera"
+      ],
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": true,
+      "targetBlank": false,
+      "tooltip": "",
+      "url": ""
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "datasource",
+        "label": "Datasource",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1,
+        "hide": 0,
+        "current": {
+          "selected": true,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        }
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values(ikea_dirigera_device_reachable, room)",
+        "hide": 0,
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "Room",
+        "multi": true,
+        "name": "room",
+        "options": [],
+        "query": {
+          "query": "label_values(ikea_dirigera_device_reachable, room)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Needs attention",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Lists only what needs you now, in every room, whatever the Room filter. A battery at 15 % or less: replace or charge it. A device the hub cannot reach: a light switched off at the wall, an empty battery, or a device out of range. Also a hub that stopped answering.",
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#fab219"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "type": "special",
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "Nothing right now",
+                  "color": "transparent",
+                  "index": 0
+                }
+              }
+            }
+          ],
+          "noValue": "Nothing right now",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#fab219",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "Not reachable",
+                        "index": 0
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 16,
+          "valueSize": 24
+        },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "min by (sensor, room) (ikea_dirigera_device_battery_percent) <= 15 and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "legendFormat": "⚠ {{sensor}}: battery",
+          "exemplar": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "max by (sensor, room) (ikea_dirigera_device_reachable) == 0 and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "B",
+          "instant": true,
+          "range": false,
+          "legendFormat": "⚠ {{sensor}} ({{room}})",
+          "exemplar": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(time() - max(max_over_time(ikea_dirigera_last_success_timestamp_seconds[1d])) > 300) or on() (absent_over_time(ikea_dirigera_last_success_timestamp_seconds[1d]) * 86400)",
+          "refId": "C",
+          "instant": true,
+          "range": false,
+          "legendFormat": "⚠ No update from the hub for",
+          "exemplar": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Lights on",
+      "description": "How many lights are on in each room, at the last poll.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Off",
+                  "color": "text",
+                  "index": 0
+                }
+              }
+            }
+          ],
+          "noValue": "No reading",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 0,
+          "displayName": "${__data.fields.room}",
+          "unit": "suffix: on"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 32
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(sum by (room) (max by (sensor, room) (ikea_light_on{room=~\"$room\"}))) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "exemplar": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "room",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Last motion",
+      "description": "How long ago each motion sensor last saw motion, in the last 24 hours. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": null,
+                "to": 45,
+                "result": {
+                  "text": "Now",
+                  "color": "text",
+                  "index": 0
+                }
+              }
+            }
+          ],
+          "noValue": "None in 24 h",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 0,
+          "displayName": "${__data.fields.room}",
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 32
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(time() - max by (sensor, room) (max_over_time(timestamp(max by (sensor, room) (ikea_motion_detected{room=~\"$room\"}) == 1)[1d:30s]))) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "exemplar": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "room",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Motion, last 24 h",
+      "description": "Time with motion at each sensor in the last 24 hours, counted from the 30 s polls.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "noValue": "No reading",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 0,
+          "displayName": "${__data.fields.room}",
+          "unit": "m"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 32
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_motion_detected{room=~\"$room\"}[1d])) * 1440) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "exemplar": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "room",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Light at the sensor",
+      "description": "Light at the light sensor of each motion sensor, in lux. 0 is too dark to measure. For scale: a lit room is about 100 to 500 lux.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "mappings": [],
+          "noValue": "No reading",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "decimals": 0,
+          "displayName": "${__data.fields.room}",
+          "unit": "lux"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "textMode": "value_and_name",
+        "wideLayout": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 32
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (ikea_illuminance_lux{room=~\"$room\"})) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "exemplar": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "room",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "bargauge",
+      "title": "Batteries",
+      "description": "Battery of each remote control and motion sensor. Yellow at 30 % or less, red at 15 % or less. A device the hub cannot reach is not listed here: see Needs attention.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 3
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "decimals": 0,
+          "noValue": "No battery devices",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d03b3b",
+                "value": null
+              },
+              {
+                "color": "#fab219",
+                "value": 15.0001
+              },
+              {
+                "color": "#8a8a8a",
+                "value": 30.0001
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "namePlacement": "left",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "maxVizHeight": 300,
+        "sizing": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "legend": {
+          "showLegend": false
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sort(min by (sensor, room) (ikea_dirigera_device_battery_percent{room=~\"$room\"})) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "legendFormat": "{{sensor}}",
+          "exemplar": false
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "state-timeline",
+      "title": "Lights over time",
+      "description": "One row for each light. Gray: off. Blue: on, darker when brighter (dim up to 33 %, medium up to 66 %, bright above). A gap means the hub could not reach the light or stopped answering.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Off",
+                  "color": "rgba(138, 138, 138, 0.25)",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 0.5,
+                "to": 33,
+                "result": {
+                  "text": "Dim",
+                  "color": "#86b6ef",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 33.0001,
+                "to": 66,
+                "result": {
+                  "text": "Medium",
+                  "color": "#3987e5",
+                  "index": 2
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 66.0001,
+                "to": 100,
+                "result": {
+                  "text": "Bright",
+                  "color": "#1c5cab",
+                  "index": 3
+                }
+              }
+            }
+          ],
+          "noValue": "No readings in this time range",
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "spanNulls": false,
+            "insertNulls": false,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8a8a8a",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.8,
+        "perPage": 40,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "((max by (sensor, room) (ikea_light_level_percent{room=~\"$room\"}) and on(sensor, room) (max by (sensor, room) (ikea_light_on{room=~\"$room\"}) == 1)) or on(sensor, room) (max by (sensor, room) (ikea_light_on{room=~\"$room\"}) * 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Motion per hour",
+      "description": "Minutes with motion in each hour, counted from the 30 s polls. A bar covers the hour before it. It shows when the room is busy; the row below shows the exact moments.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#3987e5"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": -1,
+            "drawStyle": "bars",
+            "fillOpacity": 85,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisWidth": 72,
+            "barWidthFactor": 0.85
+          },
+          "mappings": [],
+          "noValue": "No readings in this time range",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#3987e5",
+                "value": null
+              }
+            ]
+          },
+          "unit": "m",
+          "decimals": 0,
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_motion_detected{room=~\"$room\"}[1h])) * 60) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}",
+          "interval": "1h"
+        }
+      ],
+      "interval": "1h"
+    },
+    {
+      "id": 9,
+      "type": "state-timeline",
+      "title": "Motion over time",
+      "description": "One row for each motion sensor. Blue: motion seen at a poll in that stretch. Zoom in to see single moments. The hub is read every 30 s, so a short motion between 2 polls is not seen.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Quiet",
+                  "color": "rgba(138, 138, 138, 0.25)",
+                  "index": 0
+                },
+                "1": {
+                  "text": "Motion",
+                  "color": "#3987e5",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "No readings in this time range",
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "spanNulls": false,
+            "insertNulls": false,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8a8a8a",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.8,
+        "perPage": 40,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (max_over_time(ikea_motion_detected{room=~\"$room\"}[$__interval]))) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Light at the sensor over time",
+      "description": "Light at the light sensor of each motion sensor, in lux. A gap means no reading from the sensor or the hub.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#3987e5"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            },
+            "axisWidth": 72
+          },
+          "mappings": [],
+          "noValue": "No readings in this time range",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#3987e5",
+                "value": null
+              }
+            ]
+          },
+          "unit": "lux",
+          "decimals": 0,
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (max_over_time(ikea_illuminance_lux{room=~\"$room\"}[$__interval]))) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "row",
+      "title": "Batteries and connection",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "panels": []
+    },
+    {
+      "id": 12,
+      "type": "state-timeline",
+      "title": "Battery over time",
+      "description": "One row for each remote control and motion sensor. Gray: above 30 %. Yellow: 30 % or less. Red: 15 % or less, replace or charge it. A gap means the hub could not reach the device.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
+          },
+          "mappings": [
+            {
+              "type": "range",
+              "options": {
+                "from": null,
+                "to": 15,
+                "result": {
+                  "text": "Replace",
+                  "color": "#d03b3b",
+                  "index": 0
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 15.0001,
+                "to": 30,
+                "result": {
+                  "text": "Low",
+                  "color": "#fab219",
+                  "index": 1
+                }
+              }
+            },
+            {
+              "type": "range",
+              "options": {
+                "from": 30.0001,
+                "to": null,
+                "result": {
+                  "text": "OK",
+                  "color": "rgba(138, 138, 138, 0.25)",
+                  "index": 2
+                }
+              }
+            }
+          ],
+          "noValue": "No readings in this time range",
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "spanNulls": false,
+            "insertNulls": false,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8a8a8a",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.8,
+        "perPage": 40,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(min by (sensor, room) (ikea_dirigera_device_battery_percent{room=~\"$room\"})) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "state-timeline",
+      "title": "Connection over time",
+      "description": "One row for each device the exporter reads. Yellow: the hub could not reach it. A light switched off at the wall is not reachable.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "Reachable",
+                  "color": "rgba(138, 138, 138, 0.25)",
+                  "index": 0
+                },
+                "0": {
+                  "text": "Not reachable",
+                  "color": "#fab219",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "No readings in this time range",
+          "custom": {
+            "fillOpacity": 85,
+            "lineWidth": 0,
+            "spanNulls": false,
+            "insertNulls": false,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8a8a8a",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.8,
+        "perPage": 40,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "(max by (sensor, room) (ikea_dirigera_device_reachable{room=~\"$room\"})) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "refId": "A",
+          "instant": false,
+          "range": true,
+          "legendFormat": "{{room}} · {{sensor}}"
+        }
+      ]
+    }
+  ]
+}

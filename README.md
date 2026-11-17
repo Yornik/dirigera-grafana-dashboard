@@ -1,8 +1,12 @@
-# DIRIGERA Air Quality — Grafana dashboard
+# DIRIGERA Air Quality — Grafana dashboards
 
-A Grafana dashboard for [`dirigera-exporter`](https://github.com/Yornik/dirigera-exporter),
-visualising air quality from IKEA DIRIGERA environment sensors (VINDSTYRKA /
-ALPSTUGA) and STARKVIND air purifiers, scraped by Prometheus.
+Grafana dashboards for [`dirigera-exporter`](https://github.com/Yornik/dirigera-exporter),
+scraped by Prometheus:
+
+- `dashboard.json`, **DIRIGERA Air Quality**: air quality from IKEA DIRIGERA
+  environment sensors (VINDSTYRKA / ALPSTUGA) and STARKVIND air purifiers.
+- `lights-dashboard.json`, **DIRIGERA Lights and Motion**: lights, motion
+  sensors and batteries. See [Lights and motion](#lights-and-motion).
 
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="docs/dashboard-light.png">
@@ -31,6 +35,10 @@ ALPSTUGA) and STARKVIND air purifiers, scraped by Prometheus.
   speed over time, and the particles the purifier itself senses, aligned so a
   particle peak sits above the fan boost it causes.
 - A `room` template variable to show one room or all.
+- A link to the other DIRIGERA dashboard.
+
+In the history charts, "Bedroom" is blue and "Living room" is pink. A room with
+another name gets a color from the Grafana palette, by its name.
 
 Readings of exactly 0 °C, 0 % or 0 ppm are treated as "no reading" and show as
 a gap: the hub reports 0 when a sensor drops out. When the hub stops answering,
@@ -46,20 +54,53 @@ purifier senses, so a particle peak lines up with the fan boost it causes:
 
 The screenshots use generated test data, not real sensor readings.
 
+## Lights and motion
+
+`lights-dashboard.json` is a separate dashboard. It needs `dirigera-exporter`
+0.5.0 or later.
+
+- **Needs attention:** a battery at 15 % or less, a device the hub cannot
+  reach, or a hub that stopped answering. Otherwise it says "Nothing right
+  now".
+- **Now:** how many lights are on in each room, how long ago each motion
+  sensor last saw motion, the time with motion in the last 24 hours, the light
+  at the sensor in lux, and the battery of each remote control and motion
+  sensor.
+- **Lights over time:** one row for each light. Gray is off. Blue is on, and
+  darker when brighter.
+- **Motion per hour:** minutes with motion in each hour, as bars. It shows
+  when a room is busy.
+- **Motion over time:** the exact moments, one row for each sensor. Zoom in to
+  see single moments. The hub is read every 30 s, so a short motion between 2
+  polls is not seen.
+- **Light at the sensor over time.**
+- **Batteries and connection:** the battery of each device over time, and when
+  the hub could not reach a device. A light switched off at the wall is not
+  reachable.
+- The same `room` template variable, and a link to the other dashboard.
+
+Give each light a unique name in its room. Lights with the same name in a room
+share 1 row.
+
 ## Required metrics
 
 Exported by [`dirigera-exporter`](https://github.com/Yornik/dirigera-exporter):
 `ikea_air_temperature_celsius`, `ikea_air_humidity_percent`, `ikea_air_co2_ppm`,
 `ikea_air_pm25_micrograms_per_cubic_meter`, and the `ikea_air_purifier_*` series.
 
+The lights dashboard uses `ikea_light_on`, `ikea_light_level_percent`,
+`ikea_motion_detected`, `ikea_illuminance_lux`,
+`ikea_dirigera_device_battery_percent` and `ikea_dirigera_device_reachable`.
+Both use `ikea_dirigera_last_success_timestamp_seconds`.
+
 ## Import
 
 1. Grafana → Dashboards → New → **Import**.
-2. Upload `dashboard.json` (or paste its contents).
+2. Upload `dashboard.json` or `lights-dashboard.json` (or paste its contents).
 3. Select your Prometheus data source.
 
-To provision it through the kube-prometheus-stack Grafana sidecar, wrap
-`dashboard.json` in a `ConfigMap` labelled `grafana_dashboard: "1"`.
+To provision a dashboard through the kube-prometheus-stack Grafana sidecar, wrap
+its JSON file in a `ConfigMap` labelled `grafana_dashboard: "1"`.
 
 ## Disclaimer & trademarks
 
