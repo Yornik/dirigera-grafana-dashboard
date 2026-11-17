@@ -57,23 +57,26 @@ The screenshots use generated test data, not real sensor readings.
 ## Lights and motion
 
 `lights-dashboard.json` is a separate dashboard. It needs `dirigera-exporter`
-0.5.0 or later.
+0.6.0 or later: the motion counts and the remote presses come from the event
+stream of the hub. With 0.5.0 those 3 panels stay empty.
 
 - **Needs attention:** a battery at 15 % or less, a device the hub cannot
   reach, or a hub that stopped answering. Otherwise it says "Nothing right
   now".
 - **Now:** how many lights are on in each room, how long ago each motion
-  sensor last saw motion, the time with motion in the last 24 hours, the light
-  at the sensor in lux, and the battery of each remote control and motion
+  sensor last saw motion, how many motions it saw in the last 24 hours, the
+  light at the sensor in lux, and the battery of each remote control and motion
   sensor.
 - **Lights over time:** one row for each light. Gray is off. Blue is on, and
   darker when brighter.
-- **Motion per hour:** minutes with motion in each hour, as bars. It shows
-  when a room is busy.
-- **Motion over time:** the exact moments, one row for each sensor. Zoom in to
-  see single moments. The hub is read every 30 s, so a short motion between 2
-  polls is not seen.
+- **Motion per hour:** times motion started in each hour, as bars. Every
+  motion counts, also a short one. It shows when a room is busy.
+- **Motion over time:** the moments, one row for each sensor. Zoom in to see
+  single moments. Prometheus reads the value every 30 s, so a very short motion
+  can be missing in this row.
 - **Light at the sensor over time.**
+- **Remote presses, last 24 h:** presses of each remote control. A turn of a
+  scroll wheel is not a press.
 - **Batteries and connection:** the battery of each device over time, and when
   the hub could not reach a device. A light switched off at the wall is not
   reachable.
@@ -89,7 +92,9 @@ Exported by [`dirigera-exporter`](https://github.com/Yornik/dirigera-exporter):
 `ikea_air_pm25_micrograms_per_cubic_meter`, and the `ikea_air_purifier_*` series.
 
 The lights dashboard uses `ikea_light_on`, `ikea_light_level_percent`,
-`ikea_motion_detected`, `ikea_illuminance_lux`,
+`ikea_motion_detected`, `ikea_motion_detections_total`,
+`ikea_motion_last_detected_timestamp_seconds`, `ikea_remote_presses_total`,
+`ikea_illuminance_lux`,
 `ikea_dirigera_device_battery_percent` and `ikea_dirigera_device_reachable`.
 Both use `ikea_dirigera_last_success_timestamp_seconds`.
 
