@@ -468,7 +468,7 @@
       "id": 4,
       "type": "stat",
       "title": "Light at the sensor",
-      "description": "Illuminance at the light sensor of each motion sensor, as the hub reports it. 0 is dark.",
+      "description": "Light at the light sensor of each motion sensor, in lux. 0 is too dark to measure. For scale: a lit room is about 100 to 500 lux.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
@@ -854,7 +854,7 @@
       "id": 8,
       "type": "timeseries",
       "title": "Light at the sensor over time",
-      "description": "Illuminance at the light sensor of each motion sensor, as the hub reports it. A gap means no reading from the sensor or the hub.",
+      "description": "Light at the light sensor of each motion sensor, in lux. A gap means no reading from the sensor or the hub.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"

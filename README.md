@@ -59,7 +59,7 @@ The screenshots use generated test data, not real sensor readings.
   reach, or a hub that stopped answering. Otherwise it says "Nothing right
   now".
 - **Now:** how many lights are on in each room, what each motion sensor
-  reports, the light at the sensor, and the battery of each remote control and
+  reports, the light at the sensor in lux, and the battery of each remote control and
   motion sensor.
 - **Lights over time:** one row for each light. Gray is off. Blue is on, and
   darker when brighter.
