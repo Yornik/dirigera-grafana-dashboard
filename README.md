@@ -37,8 +37,33 @@ scraped by Prometheus:
 - A `room` template variable to show one room or all.
 - A link to the other DIRIGERA dashboard.
 
-In the history charts, "Bedroom" is blue and "Living room" is pink. A room with
-another name gets a color from the Grafana palette, by its name.
+### Room colors
+
+In the history charts each common room name has a fixed color and line style.
+Grafana does not pick a color by itself, so 2 rooms do not get similar colors
+by chance.
+
+| Room name contains | Line |
+| --- | --- |
+| bed | blue |
+| living, lounge | pink |
+| office, study | yellow |
+| bath, shower | green, dashed |
+| kitchen | pink, dashed |
+| attic, loft | yellow, dashed |
+| hall, entrance, corridor | blue, dashed |
+| closet, wardrobe, storage | green, dotted |
+| garage, basement, cellar | pink, dotted |
+
+Blue, pink and yellow are the 3 colors of the palette that stay apart for every
+pair of lines, also for a color-blind reader. So a 4th room and up also get a
+dashed or a dotted line. A room with another name is gray. To give it a color,
+add a field override "Fields with name matching regex" to the 4 history
+charts. 2 rooms that match the same row, such as 2 bedrooms, share a line
+style: tell them apart in the legend, or add an override.
+
+The temperature and the humidity chart draw the average of each time step.
+The charts are 12 columns wide and 10 rows high, close to the golden ratio.
 
 Readings of exactly 0 °C, 0 % or 0 ppm are treated as "no reading" and show as
 a gap: the hub reports 0 when a sensor drops out. When the hub stops answering,
@@ -52,9 +77,17 @@ purifier senses, so a particle peak lines up with the fan boost it causes:
   <img alt="Air purifier panels: fan mode and speed, filter state, fan speed over time and the particles the purifier senses" src="docs/purifier-dark.png" width="800">
 </picture>
 
-The screenshots use generated test data, not real sensor readings.
+The screenshots use generated test data, not real sensor readings. To make
+them again: load the data of `tools/testdata.py` into an empty Prometheus,
+provision both dashboards in a local Grafana that reads it, and take each image
+with `tools/screenshot.js`. The header of each file gives the commands.
 
 ## Lights and motion
+
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/lights-light.png">
+  <img alt="The DIRIGERA lights and motion dashboard, rendered with test data: what needs attention, lights on in each room, last motion, and a row for each light over 24 hours" src="docs/lights-dark.png" width="800">
+</picture>
 
 `lights-dashboard.json` is a separate dashboard. It needs `dirigera-exporter`
 0.6.0 or later: the motion counts and the remote presses come from the event
@@ -64,9 +97,8 @@ stream of the hub. With 0.5.0 those 3 panels stay empty.
   reach, or a hub that stopped answering. Otherwise it says "Nothing right
   now".
 - **Now:** how many lights are on in each room, how long ago each motion
-  sensor last saw motion, how many motions it saw in the last 24 hours, the
-  light at the sensor in lux, and the battery of each remote control and motion
-  sensor.
+  sensor last saw motion, how many motions it saw in the last 24 hours, and
+  the light level at the sensor in lux.
 - **Lights over time:** one row for each light. Gray is off. Blue is on, and
   darker when brighter.
 - **Motion per hour:** times motion started in each hour, as bars. Every
@@ -74,11 +106,11 @@ stream of the hub. With 0.5.0 those 3 panels stay empty.
 - **Motion over time:** the moments, one row for each sensor. Zoom in to see
   single moments. Prometheus reads the value every 30 s, so a very short motion
   can be missing in this row.
-- **Light at the sensor over time.**
+- **Light level over time.**
 - **Remote presses, last 24 h:** presses of each remote control. A turn of a
   scroll wheel is not a press.
-- **Batteries and connection:** the battery of each device over time, and when
-  the hub could not reach a device. A light switched off at the wall is not
+- **Batteries and connection:** the battery of each remote control and motion
+  sensor now and over time, and when the hub could not reach a device. A light switched off at the wall is not
   reachable.
 - The same `room` template variable, and a link to the other dashboard.
 

@@ -569,7 +569,7 @@
         "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -582,7 +582,7 @@
         "wideLayout": true,
         "text": {
           "titleSize": 14,
-          "valueSize": 32
+          "valueSize": 20
         }
       },
       "targets": [
@@ -667,7 +667,7 @@
         "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -680,7 +680,7 @@
         "wideLayout": true,
         "text": {
           "titleSize": 14,
-          "valueSize": 32
+          "valueSize": 20
         }
       },
       "targets": [
@@ -716,13 +716,13 @@
       "id": 5,
       "type": "timeseries",
       "title": "Temperature over time",
-      "description": "Gray band: comfortable, about 16-19 °C in a bedroom and 19-22 °C in other rooms. Pick 1 room in the Room filter to see its comfortable range. The sensors may read about 2 °C high until a correction is set in the exporter. A gap means no reading from the sensor or the hub.",
+      "description": "Average of each time step. Gray band: comfortable, about 16-19 °C in a bedroom and 19-22 °C in other rooms. Pick 1 room in the Room filter to see its comfortable range. The sensors may read about 2 °C high until a correction is set in the exporter. A gap means no reading from the sensor or the hub.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
         "y": 11
@@ -730,7 +730,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic-by-name"
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
           },
           "custom": {
             "axisBorderShow": false,
@@ -782,8 +783,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Bedroom"
+              "id": "byRegexp",
+              "options": "/bed/i"
             },
             "properties": [
               {
@@ -797,8 +798,8 @@
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "Living room"
+              "id": "byRegexp",
+              "options": "/living|lounge/i"
             },
             "properties": [
               {
@@ -806,6 +807,171 @@
                 "value": {
                   "mode": "fixed",
                   "fixedColor": "#d55181"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/office|study/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bath|shower/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/kitchen/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/attic|loft/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hall|entrance|corridor/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/closet|wardrobe|storage/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/garage|basement|cellar/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
                 }
               }
             ]
@@ -923,25 +1089,26 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (ikea_air_temperature_celsius{room=~\"$room\"}) and on(sensor, room) (max by (sensor, room) (ikea_air_humidity_percent{room=~\"$room\"}) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_air_temperature_celsius{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
           "refId": "A",
           "instant": false,
           "range": true,
           "legendFormat": "{{room}}"
         }
-      ]
+      ],
+      "interval": "1m"
     },
     {
       "id": 6,
       "type": "timeseries",
       "title": "Humidity over time",
-      "description": "Gray band: 40-60 %, comfortable. A gap means no reading from the sensor or the hub.",
+      "description": "Average of each time step. Gray band: 40-60 %, comfortable. A gap means no reading from the sensor or the hub.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
         "y": 11
@@ -949,7 +1116,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic-by-name"
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1011,8 +1179,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Bedroom"
+              "id": "byRegexp",
+              "options": "/bed/i"
             },
             "properties": [
               {
@@ -1026,8 +1194,8 @@
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "Living room"
+              "id": "byRegexp",
+              "options": "/living|lounge/i"
             },
             "properties": [
               {
@@ -1035,6 +1203,171 @@
                 "value": {
                   "mode": "fixed",
                   "fixedColor": "#d55181"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/office|study/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bath|shower/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/kitchen/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/attic|loft/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hall|entrance|corridor/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/closet|wardrobe|storage/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/garage|basement|cellar/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
                 }
               }
             ]
@@ -1062,13 +1395,14 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(max by (sensor, room) (ikea_air_humidity_percent{room=~\"$room\"}) > 0) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
+          "expr": "(max by (sensor, room) (avg_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) and on(sensor, room) (max by (sensor, room) (min_over_time(ikea_air_humidity_percent{room=~\"$room\"}[$__interval])) > 0)) and on() (time() - max(ikea_dirigera_last_success_timestamp_seconds) < 300)",
           "refId": "A",
           "instant": false,
           "range": true,
           "legendFormat": "{{room}}"
         }
-      ]
+      ],
+      "interval": "1m"
     },
     {
       "id": 7,
@@ -1080,15 +1414,16 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 21
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic-by-name"
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1145,8 +1480,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Bedroom"
+              "id": "byRegexp",
+              "options": "/bed/i"
             },
             "properties": [
               {
@@ -1160,8 +1495,8 @@
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "Living room"
+              "id": "byRegexp",
+              "options": "/living|lounge/i"
             },
             "properties": [
               {
@@ -1169,6 +1504,171 @@
                 "value": {
                   "mode": "fixed",
                   "fixedColor": "#d55181"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/office|study/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bath|shower/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/kitchen/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/attic|loft/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hall|entrance|corridor/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/closet|wardrobe|storage/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/garage|basement|cellar/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
                 }
               }
             ]
@@ -1215,15 +1715,16 @@
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 21
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic-by-name"
+            "mode": "fixed",
+            "fixedColor": "#8a8a8a"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1284,8 +1785,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Bedroom"
+              "id": "byRegexp",
+              "options": "/bed/i"
             },
             "properties": [
               {
@@ -1299,8 +1800,8 @@
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "Living room"
+              "id": "byRegexp",
+              "options": "/living|lounge/i"
             },
             "properties": [
               {
@@ -1308,6 +1809,171 @@
                 "value": {
                   "mode": "fixed",
                   "fixedColor": "#d55181"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/office|study/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/bath|shower/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/kitchen/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/attic|loft/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#c98500"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/hall|entrance|corridor/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3987e5"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/closet|wardrobe|storage/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#199e70"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/garage|basement|cellar/i"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#d55181"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dot",
+                  "dash": [
+                    2,
+                    6
+                  ]
                 }
               }
             ]
@@ -1350,7 +2016,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 31
       },
       "id": 9,
       "panels": [],
@@ -1377,7 +2043,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 32
       },
       "fieldConfig": {
         "defaults": {
@@ -1525,7 +2191,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 35
       },
       "fieldConfig": {
         "defaults": {
@@ -1625,7 +2291,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 41
       },
       "fieldConfig": {
         "defaults": {
