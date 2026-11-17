@@ -5,12 +5,39 @@ Writes data2.om in the OpenMetrics format. Load it into an empty Prometheus:
     PYTHONHASHSEED=0 python3 tools/testdata.py
     promtool tsdb create-blocks-from openmetrics data2.om promdata
 
-No value in it is a real reading.
+No value in it is a real reading. The data is composed, so that the
+screenshots read well. It follows the golden ratio, phi = 1.618:
+
+- The week builds up to a focal point at 0.618 of the time range: the widest
+  temperature swing, the highest CO2 night and the highest PM2.5 peak are there.
+- The PM2.5 peaks stand at the golden sections of the week (0.382, 0.618 and
+  0.854) and their heights fall by phi: 150, 93 and 57.
+- The gaps between the temperature lines shrink by phi, from the bottom up.
+- On the lights dashboard the motions in each hour follow the Fibonacci numbers
+  up to a focal hour at 0.618 of the day and back: 1, 1, 2, 3, 5, 8, 5, 3, 2, 1, 1.
+  The presses of the 4 remotes in a day are 8, 5, 3 and 2.
 """
 import time, math, random
 random.seed(11)
 END = int(time.time()) // 3600 * 3600
 STEP = 60
+PHI = (1 + 5 ** 0.5) / 2
+WEEK0 = END - 7 * 86400
+def focus(t):
+    """1 at the golden section of the week, falling to about 0 at both ends."""
+    return math.exp(-(((t - WEEK0) / (7 * 86400) - 1 / PHI) / 0.22) ** 2)
+# Motions in each hour of the last 24: Fibonacci numbers up to the focal hour, 0.618 of the day, and back.
+FIB_DAY = [0] * 24
+for offset, count in zip(range(-5, 6), (1, 1, 2, 3, 5, 8, 5, 3, 2, 1, 1)):
+    FIB_DAY[round(24 / PHI) + offset] = count
+def motions_in_hour(t): return FIB_DAY[23 - ((END - 1 - t) // 3600) % 24]
+def moving_at(t):
+    count = motions_in_hour(t)
+    return count > 0 and ((t % 3600) // 60) in {int((k + 0.5) * 60 / count) for k in range(count)}
+PRESSES_A_DAY = {"Sofa wheel": 8, "Kitchen wheel": 5, "Bedroom wheel": 3, "Bath wheel": 2}
+def pressed_at(name, t):
+    count = PRESSES_A_DAY[name]; minute = ((t + 3600) % 86400) // 60 - 420       # between 07:00 and 23:00
+    return 0 <= minute < 960 and minute in {int((k + 0.5) * 960 / count) for k in range(count)}
 T = list(range(END - 7 * 86400 - 3600, END + 1, STEP))
 def hour(t): return ((t % 86400) / 3600 + 1) % 24     # local time, UTC+1
 fam = {}
@@ -23,8 +50,9 @@ def add(metric, labels, t, v):
     lab = ",".join('%s="%s"' % kv for kv in labels.items())
     fam.setdefault(metric, []).append("%s{%s} %s %d" % (metric, lab, v, t) if lab else "%s %s %d" % (metric, v, t))
 air = {  # room: (sensor, base temp, swing, base rh, has co2/pm25)
-    "Bedroom": ("Bedroom sensor", 18.2, 1.0, 58, True), "Living room": ("Living room sensor", 20.6, 1.0, 48, True),
-    "Office": ("Office sensor", 19.4, 0.8, 52, False), "Bathroom": ("Bathroom sensor", 21.0, 0.6, 62, False)}
+    # The gaps between the temperature lines shrink by phi: 1.62, 1.0 and 0.62 degrees.
+    "Bedroom": ("Bedroom sensor", 18.0, 1.0, 59, True), "Living room": ("Living room sensor", 20.62, 0.62, 46, True),
+    "Office": ("Office sensor", 19.62, 0.62, 51, False), "Bathroom": ("Bathroom sensor", 21.24, 0.38, 62, False)}
 lights = [("Kitchen","Ceiling 1"),("Kitchen","Ceiling 2"),("Kitchen","Worktop strip"),("Living room","Floor lamp"),("Living room","Reading lamp"),
           ("Living room","TV light"),("Bedroom","Bedside"),("Bedroom","Ceiling"),("Entrance","Hall 1"),("Entrance","Hall 2"),("Bathroom","Mirror")]
 def light(room, name, t):
@@ -32,7 +60,7 @@ def light(room, name, t):
     if room == "Kitchen": on = 6.7 < h < 7.6 or 17.5 < h < 20.2; lvl = 100 if name != "Worktop strip" else 60
     elif room == "Living room": on = 17 < h < 23.2 and not (name == "Reading lamp" and h < 20.5); lvl = 100 if h < 21 else (45 if name != "TV light" else 20)
     elif room == "Bedroom": on = 6.4 < h < 7.1 or 22.3 < h < 23.6; lvl = 25 if name == "Bedside" else 70
-    elif room == "Entrance": on = (int(t/600) * 2654435761 % 97) < (14 if 7 < h < 23 else 2); lvl = 80
+    elif room == "Entrance": on = any(moving_at(t - 60 * k) for k in range(4)); lvl = 80      # the motion sensor switches them
     else: on = 6.5 < h < 7.0 or 22.0 < h < 22.4; lvl = 100
     return on, lvl
 remotes = [("Kitchen","Kitchen wheel",85),("Living room","Sofa wheel",27),("Bedroom","Bedroom wheel",12),("Bathroom","Bath wheel",93)]
@@ -47,11 +75,11 @@ for t in T:
     for room, (sensor, base, swing, rh, full) in air.items():
         L = {"sensor": sensor, "room": room}
         st = state.setdefault(room, {"n": 0.0, "hn": 0.0, "co2": 480.0, "pm": 2.0, "amp": {}, "peak": {}})
-        amp = st["amp"].setdefault(day, random.uniform(0.65, 1.25)); ph = PHASE[room]
+        amp = st["amp"].setdefault(day, 0.62 + 0.62 * focus(t + 43200) + random.uniform(-0.04, 0.04)); ph = PHASE[room]
         # A heating day: a slow rise after the morning, a plateau, a fall at night. Not a pure sine.
         x = math.sin(2 * math.pi * (h - ph) / 24); shape = math.copysign(abs(x) ** 0.7, x)
         st["n"] += 0.02 * (random.gauss(0, 1) - 0.6 * st["n"])                     # slow, smooth wander
-        weather = 0.5 * math.sin(2 * math.pi * (t - T[0]) / (3.3 * 86400) + ph)    # warmer and cooler days
+        weather = 0.25 * math.sin(2 * math.pi * (t - T[0]) / (3.3 * 86400) + ph)   # warmer and cooler days
         temp = base + swing * amp * shape + weather + 0.25 * st["n"]
         add("ikea_air_temperature_celsius", L, t, round(temp, 2))
         st["hn"] += 0.03 * (random.gauss(0, 1) - 0.5 * st["hn"])
@@ -62,15 +90,16 @@ for t in T:
             if since < 2.5: hum += 14 * amp * math.exp(-since / 0.55) * min(1, since / 0.08)
         add("ikea_air_humidity_percent", L, t, round(hum))
         if full:
-            if room == "Bedroom": target = st["peak"].setdefault(("n", day), random.uniform(1020, 1320)) if (h >= 23 or h < 7) else 470
-            else: target = st["peak"].setdefault(("e", day), random.uniform(700, 920)) if 19 < h < 23 else 480
+            if room == "Bedroom": target = st["peak"].setdefault(("n", day), 1010 + 320 * focus(t)) if (h >= 23 or h < 7) else 470
+            else: target = st["peak"].setdefault(("e", day), 690 + 200 * focus(t)) if 19 < h < 23 else 480
             tau = 110 if target > st["co2"] else 45                                # minutes: fills slowly, airs fast
             st["co2"] += (target - st["co2"]) * (STEP / 60) / tau
             add("ikea_air_co2_ppm", L, t, round(st["co2"] + random.uniform(-6, 6)))
-            cook = room == "Living room" and day in (1, 3, 4, 6) and abs(h - (18.3 + 0.1 * day)) < STEP / 7200
-            candle = room == "Bedroom" and day == 2 and abs(h - 21.0) < STEP / 7200
-            if cook: st["pm"] += st["peak"].setdefault(("p", day), random.uniform(45, 150))
-            if candle: st["pm"] += 55
+            # Cooking peaks at the golden sections of the week. Their heights fall by phi.
+            for section, height in ((1 / PHI, 150), (1 - 1 / PHI, 150 / PHI), (1 / PHI + 1 / PHI ** 3, 150 / PHI ** 2)):
+                if room == "Living room" and abs(t - (WEEK0 + section * 7 * 86400)) < STEP / 2: st["pm"] += height
+            # A candle in the bedroom, 0.618 of an hour after the highest peak: the purifier answers.
+            if room == "Bedroom" and abs(t - (WEEK0 + 7 * 86400 / PHI + 3600 / PHI)) < STEP / 2: st["pm"] += 150 / PHI ** 2
             st["pm"] += (1.6 + 0.6 * math.sin(t / 9000.0) - st["pm"]) * (STEP / 60) / 14
             add("ikea_air_pm25_micrograms_per_cubic_meter", L, t, max(0, round(st["pm"])))
         add("ikea_dirigera_device_reachable", L, t, 1)
@@ -91,7 +120,7 @@ for t in T:
         on, lvl = light(room, name, t)
         add("ikea_light_on", L, t, int(on)); add("ikea_light_level_percent", L, t, lvl); add("ikea_light_color_temperature_kelvin", L, t, 2702)
     H = {"sensor": "Hall sensor", "room": "Entrance"}
-    moving = (int(t/300) * 2246822519 % 101) < (22 if 7 < h < 23 else 3)
+    moving = moving_at(t)
     if moving and not was: motions += 1; last_motion = t
     was = moving
     add("ikea_motion_detected", H, t, int(moving))
@@ -105,8 +134,7 @@ for t in T:
         frac = (t - T[0]) / (T[-1] - T[0])
         v = b if name not in ("Sofa wheel", "Bedroom wheel") else (33 - 6 * frac if name == "Sofa wheel" else 18 - 6 * frac)
         add("ikea_dirigera_device_reachable", L, t, 1); add("ikea_dirigera_device_battery_percent", L, t, round(v))
-        rate = {"Kitchen wheel": 9, "Sofa wheel": 14, "Bedroom wheel": 6, "Bath wheel": 4}[name]
-        if 7 < h < 23.5 and (int(t / STEP) * 40503 + hash(name)) % 997 < rate: presses[name] += 1
+        if pressed_at(name, t): presses[name] += 1
         add("ikea_remote_presses_total", {**L, "pattern": "singlePress"}, t, presses[name])
     add("ikea_dirigera_device_reachable", {"sensor": "Old remote", "room": "Living room"}, t, 0)
 with open("data2.om", "w") as f:

@@ -85,7 +85,9 @@ purifier senses, so a particle peak lines up with the fan boost it causes:
   <img alt="Air purifier panels: fan mode and speed, filter state, fan speed over time and the particles the purifier senses" src="docs/purifier-dark.png" width="800">
 </picture>
 
-The screenshots use generated test data, not real sensor readings. To make
+The screenshots use generated test data, not real sensor readings. The data is
+composed on the golden ratio, so the week builds up to a focal point at 0.618
+of the time range; the header of `tools/testdata.py` lists the rules. To make
 them again: load the data of `tools/testdata.py` into an empty Prometheus,
 provision both dashboards in a local Grafana that reads it, and take each image
 with `tools/screenshot.js`. The header of each file gives the commands.
